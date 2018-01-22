@@ -39,10 +39,3 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ENV NVIDIA_REQUIRE_CUDA "cuda>=8.0"
-
-RUN conda install --quiet --yes -c pytorch \
-    'pytorch=0.3.0' \
-    'torchvision=0.2.0' && \
-    conda clean -tipsy && \
-    fix-permissions $CONDA_DIR
-USER $NB_USER
