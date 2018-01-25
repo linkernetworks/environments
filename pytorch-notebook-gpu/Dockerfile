@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook
+FROM linkernetworks/gpu-notebook
 
 LABEL maintainer="Narumi"
 

@@ -1,6 +1,7 @@
 FROM linkernetworks/gpu-notebook
 LABEL maintainer="chrisjan"
-RUN conda install --quiet --yes -c anaconda caffe && \
-    conda install --quiet --yes -c anaconda python-lmdb && \
+RUN conda install --quiet --yes -c anaconda \
+        caffe-gpu \
+        python-lmdb && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR
