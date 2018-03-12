@@ -13,6 +13,6 @@ RUN apt-get update && \
 USER $NB_USER
 
 # Install MXNet and graphviz
-RUN pip install -U mxnet==1.0.0 \
+RUN pip install -U mxnet==1.1.0 \
                    graphviz && \
     rm -rf ~/.cache/pip
