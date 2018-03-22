@@ -29,6 +29,11 @@ NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
 NOTEBOOK_NAMES := $(notdir $(NOTEBOOK_DIRS))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 
+BASE_DOCKERFILES := $(sort $(wildcard base/*/Dockerfile$(DOCKERFILE_VARIANT)))
+BASE_DIRS := $(patsubst %/Dockerfile,%,$(basename $(BASE_DOCKERFILES)))
+BASE_NAMES := $(notdir $(BASE_DIRS))
+BASE_TARGETS := $(addprefix base-image-,$(BASE_NAMES))
+
 # The DOCKERFILE_VARIANT can be specified from the command line arguments
 # to build a specific Dockerfile. for example, "Dockerfile.gpu", e.g.,
 #
@@ -36,9 +41,9 @@ NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 #
 IMAGE_NAMES := $(APP_NAMES)
 PUSH_NOTEBOOK_IMAGES := $(addprefix push-public-image-,$(NOTEBOOK_NAMES))
-PUSH_IMAGES := $(addprefix push-image-,$(IMAGE_NAMES))
+PUSH_BASE_IMAGES := $(addprefix push-public-image-,$(BASE_NAMES))
 
-all: notebook-images push-notebook-images 
+all: base-images push-base-images notebook-images push-notebook-images 
 
 # the first pattern % will locate the Dockerfile,
 # the given DOCKERFILE_VARIANT can be used for specifying which Dockerfile to use.
@@ -58,10 +63,26 @@ else
 		$(dir $<)
 endif
 
-notebook-images: $(NOTEBOOK_TARGETS)
+base-image-%: base/%/Dockerfile$(DOCKERFILE_VARIANT) $(shell find base/$* -type f)
+ifeq ($(strip $(DOCKERFILE_VARIANT)),)
+	time docker build $(DOCKER_BUILD_FLAGS) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG) \
+		--file $< \
+		$(dir $<)
+else
+	time docker build $(DOCKER_BUILD_FLAGS) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--file $< \
+		$(dir $<)
+endif
 
-list-notebook-images:
-	@echo $(NOTEBOOK_TARGETS)
+notebook-images: $(NOTEBOOK_TARGETS)
+base-images: $(BASE_TARGETS)
+
+list-images:
+	@echo $(NOTEBOOK_TARGETS) $(BASE_TARGETS)
 
 push-public-image-%: 
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
@@ -71,3 +92,4 @@ else
 endif
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
+push-base-images: $(PUSH_BASE_IMAGES)
