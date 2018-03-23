@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook
+FROM linkernetworks/minimal-notebook:master
 
 LABEL maintainer="Narumi"
 
@@ -14,5 +14,5 @@ USER $NB_USER
 
 # Install MXNet and graphviz
 RUN pip install -U mxnet==1.1.0 \
-                   graphviz && \
+    graphviz && \
     rm -rf ~/.cache/pip

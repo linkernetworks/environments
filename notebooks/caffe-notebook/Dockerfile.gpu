@@ -1,4 +1,4 @@
-FROM linkernetworks/gpu-notebook
+FROM linkernetworks/minimal-notebook:master-gpu
 LABEL maintainer="chrisjan"
 RUN conda install --quiet --yes -c anaconda \
         caffe-gpu \

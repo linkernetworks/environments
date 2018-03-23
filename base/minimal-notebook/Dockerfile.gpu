@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook
+FROM linkernetworks/minimal-notebook:master
 
 USER root
 
