@@ -24,7 +24,7 @@ IMAGE_ANCHOR_TAG := $(GIT_SYMREF)
 endif
 
 # DOCKER_BUILD_FLAGS=--quiet
-NOTEBOOK_DOCKERFILES := $(sort $(wildcard notebooks/*/Dockerfile$(DOCKERFILE_VARIANT)))
+NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/Dockerfile$(DOCKERFILE_VARIANT)))
 NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
 NOTEBOOK_NAMES := $(notdir $(NOTEBOOK_DIRS))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
@@ -48,7 +48,7 @@ all: base-images push-base-images notebook-images push-notebook-images
 # the first pattern % will locate the Dockerfile,
 # the given DOCKERFILE_VARIANT can be used for specifying which Dockerfile to use.
 # when DOCKERFILE_VARIANT is given, the tag :latest won't be used.
-notebook-image-%: notebooks/%/Dockerfile$(DOCKERFILE_VARIANT) $(shell find notebooks/$* -type f)
+notebook-image-%: env/%/Dockerfile$(DOCKERFILE_VARIANT) $(shell find env/$* -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG) \
