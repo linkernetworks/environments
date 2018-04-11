@@ -1,0 +1,24 @@
+FROM linkernetworks/minimal-notebook:master
+
+RUN apt-get update && apt-get install -y \
+    cmake \
+    libiomp-dev \
+    libopenmpi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install MKL-DNN
+ENV MKL_DNN_VERSION 0.13
+RUN (cd /tmp \
+    && wget -q https://github.com/intel/mkl-dnn/archive/v${MKL_DNN_VERSION}.tar.gz \
+    && tar -xvf v${MKL_DNN_VERSION}.tar.gz \
+    && cd mkl-dnn-${MKL_DNN_VERSION}/scripts \
+    && ./prepare_mkl.sh \
+    && cd .. \
+    && mkdir -p build \
+    && cd build \
+    && cmake .. \
+    && make install) \
+    && rm -rf /tmp
+
+# Install CNTK
+RUN pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.5-cp36-cp36m-linux_x86_64.whl
