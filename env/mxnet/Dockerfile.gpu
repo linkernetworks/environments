@@ -8,6 +8,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install MXNet and graphviz
-RUN pip install -U mxnet==1.1.0 \
+RUN pip install -U mxnet-cu80==1.1.0 \
     graphviz && \
     rm -rf ~/.cache/pip
