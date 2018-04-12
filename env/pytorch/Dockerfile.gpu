@@ -6,6 +6,6 @@ LABEL maintainer="Narumi"
 RUN conda install --quiet --yes -c pytorch \
     'pytorch=0.3.1' \
     'torchvision=0.2.0' \
-    cuda90 \
+    cuda80 \
     && conda clean -tipsy \
     && fix-permissions $CONDA_DIR
