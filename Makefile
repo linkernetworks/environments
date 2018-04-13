@@ -17,12 +17,16 @@ ifeq ($(IMAGE_TAG),)
 IMAGE_TAG := $(GIT_SYMREF)-$(GIT_REV_SHORT)
 endif
 
-
 # image anchor tag should refers to "latest" or "develop"
 ifeq ($(IMAGE_ANCHOR_TAG),)
 IMAGE_ANCHOR_TAG := $(GIT_SYMREF)
 endif
 
+# The DOCKERFILE_VARIANT can be specified from the command line arguments
+# to build a specific Dockerfile. for example, "Dockerfile.gpu", e.g.,
+#
+#     make trainer-image-caffe-trainer DOCKERFILE_VARIANT=".gpu"
+#
 # DOCKER_BUILD_FLAGS=--quiet
 NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/Dockerfile$(DOCKERFILE_VARIANT)))
 NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
@@ -34,14 +38,11 @@ BASE_DIRS := $(patsubst %/Dockerfile,%,$(basename $(BASE_DOCKERFILES)))
 BASE_NAMES := $(notdir $(BASE_DIRS))
 BASE_TARGETS := $(addprefix base-image-,$(BASE_NAMES))
 
-# The DOCKERFILE_VARIANT can be specified from the command line arguments
-# to build a specific Dockerfile. for example, "Dockerfile.gpu", e.g.,
-#
-#     make trainer-image-caffe-trainer DOCKERFILE_VARIANT=".gpu"
-#
-IMAGE_NAMES := $(APP_NAMES)
 PUSH_NOTEBOOK_IMAGES := $(addprefix push-public-image-,$(NOTEBOOK_NAMES))
 PUSH_BASE_IMAGES := $(addprefix push-public-image-,$(BASE_NAMES))
+
+IMAGE_NAMES := $(BASE_NAMES) $(NOTEBOOK_NAMES) 
+CLEAN_NOTEBOOK_IMAGES := $(addprefix clean-image-,$(IMAGE_NAMES))
 
 all: base-images push-base-images notebook-images push-notebook-images 
 
@@ -78,11 +79,18 @@ else
 		$(dir $<)
 endif
 
+clean-notebook-images: $(CLEAN_NOTEBOOK_IMAGES)
+
+clean-image-%:
+	docker rmi -f $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG) || true
+
 notebook-images: $(NOTEBOOK_TARGETS)
 base-images: $(BASE_TARGETS)
 
 list-images:
 	@echo $(NOTEBOOK_TARGETS) $(BASE_TARGETS)
+
+clean: clean-notebook-images
 
 push-public-image-%: 
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
