@@ -1,0 +1,9 @@
+FROM linkernetworks/minimal-notebook:master-cud90
+
+LABEL maintainer="Narumi"
+
+# Install Tensorflow
+RUN pip install -U \
+    tensorflow-gpu==1.5.1 \
+    keras && \
+    rm -rf ~/.cache/pip
