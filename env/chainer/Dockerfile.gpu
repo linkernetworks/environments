@@ -1,5 +1,7 @@
 FROM linkernetworks/minimal-notebook:master-gpu
 
 # Install Chainer and CuPy
-RUN pip install -u cupy chainer \
+RUN pip install -U \
+    cupy==2.5.0 \
+    chainer==3.5.0 \
     && rm -rf ~/.cache/pip
