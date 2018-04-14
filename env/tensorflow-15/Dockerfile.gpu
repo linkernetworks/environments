@@ -1,4 +1,4 @@
-FROM linkernetworks/minimal-notebook:master-cud90
+FROM linkernetworks/minimal-notebook:master-cuda90
 
 LABEL maintainer="Narumi"
 
