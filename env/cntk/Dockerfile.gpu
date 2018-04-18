@@ -18,7 +18,7 @@ RUN (cd /tmp \
     && cd build \
     && cmake .. \
     && make install) \
-    && rm -rf /tmp
+    && rm -rf /tmp/*
 
 # Install CNTK
 RUN pip install https://cntk.ai/PythonWheel/GPU/cntk_gpu-2.5-cp36-cp36m-linux_x86_64.whl
