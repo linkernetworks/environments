@@ -1,0 +1,40 @@
+FROM linkernetworks/minimal-notebook:master-cuda90
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    libgtest-dev \
+    libiomp-dev \
+    libleveldb-dev \
+    liblmdb-dev \
+    libopencv-dev \
+    libopenmpi-dev \
+    libprotobuf-dev \
+    libsnappy-dev \
+    openmpi-bin \
+    openmpi-doc \
+    protobuf-compiler \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install -U pip==9.0.3 \ 
+    && pip3 install -U \
+    future \
+    numpy \
+    protobuf \
+    && rm -rf ~/.cache/pip
+
+RUN git clone --recursive https://github.com/pytorch/pytorch.git /tmp/pytorch \
+    && mkdir -p /tmp/pytorch/build \
+    && ( cd /tmp/pytorch/build \   
+    && cmake -DPYTHON_EXECUTABLE=$(which python) .. \ 
+    && make -j$(nproc) install ) \
+    && rm -rf /tmp/* \
+    && ldconfig
+
+# RUN conda install --quiet --yes -c caffe2 \
+#     caffe2==0.8.dev \
+#     && conda clean -tipsy \
+#     && fix-permissions $CONDA_DIR
