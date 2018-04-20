@@ -1,4 +1,4 @@
-FROM linkernetworks/minimal-notebook:master-gpu
+FROM linkernetworks/minimal-notebook:master-cuda80
 
 RUN apt-get update && apt-get install -y \
     cmake \
