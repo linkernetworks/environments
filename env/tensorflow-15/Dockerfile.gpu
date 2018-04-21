@@ -6,5 +6,4 @@ LABEL maintainer="Narumi"
 RUN pip install -U \
     tensorflow-gpu==1.5.1 \
     keras \
-    h5py \
     && rm -rf ~/.cache/pip

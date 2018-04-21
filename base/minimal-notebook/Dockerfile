@@ -33,3 +33,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 ENV HOME=/
+
+RUN pip install pip==9.0.3 \
+    && pip install -U h5py \
+    && rm -rf ~/.cache/pip
