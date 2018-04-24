@@ -1,4 +1,4 @@
-FROM linkernetworks/minimal-notebook:master-gpu
+FROM linkernetworks/minimal-notebook:master-cuda80
 
 # Install Chainer and CuPy
 RUN pip install -U \
