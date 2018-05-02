@@ -40,3 +40,5 @@ RUN pip install pip==9.0.3 \
 
 # Install aiforge command line tool for all base images.
 RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash    
+
+WORKDIR /workspace
