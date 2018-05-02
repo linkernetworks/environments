@@ -10,27 +10,11 @@ USER root
 # Install all OS dependencies for fully functional notebook server
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     build-essential \
-    emacs \
     git \
-    inkscape \
-    jed \
-    libsm6 \
-    libxext-dev \
-    libxrender1 \
-    lmodern \
-    netcat \
-    pandoc \
-    python-dev \
-    texlive-fonts-extra \
-    texlive-fonts-recommended \
-    texlive-generic-recommended \
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-xetex \
     unzip \
     vim \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV HOME=/
 
@@ -39,4 +23,4 @@ RUN pip install pip==9.0.3 \
     && rm -rf ~/.cache/pip
 
 # Install aiforge command line tool for all base images.
-RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash    
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
