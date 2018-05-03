@@ -67,6 +67,7 @@ endif
 base-image-%: base/%/Dockerfile$(DOCKERFILE_VARIANT) $(shell find base/$* -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
+		--build-arg CACHE_DATE=$(BUILD_DATE) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG) \
 		--file $< \
