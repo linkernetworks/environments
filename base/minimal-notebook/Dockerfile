@@ -36,6 +36,8 @@ ENV HOME=/
 
 RUN pip install pip==9.0.3 \
     && pip install -U h5py \
+    && pip install ipywidgets \
+    && jupyter nbextension enable --sys-prefix --py widgetsnbextension \
     && rm -rf ~/.cache/pip
 
 # Disable cache for the following instructions
