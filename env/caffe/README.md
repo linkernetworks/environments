@@ -1,16 +1,9 @@
 
+# Caffe1 environment image
+
 ![docker pulls](https://img.shields.io/docker/pulls/linkernetworks/caffe.svg) ![docker stars](https://img.shields.io/docker/stars/linkernetworks/caffe.svg) [![](https://images.microbadger.com/badges/image/linkernetworks/caffe.svg)](https://microbadger.com/images/linkernetworks/caffe "linkernetworks/caffe image metadata")
 
 
-## Build Docker
+# Caffe2 environment image
 
-### Build
-
-```
-docker build -f Dockerfile -t asia.gcr.io/linker-aurora/caffe-notebook .
-```
-
-### Run
-```
-docker run -d -v /workspace:/workspace -p 8888:8888 asia.gcr.io/linker-aurora/caffe-notebook start-notebook.sh --NotebookApp.base_url=/v1 --NotebookApp.token=''
-```
+![docker pulls](https://img.shields.io/docker/pulls/linkernetworks/caffe2.svg) ![docker stars](https://img.shields.io/docker/stars/linkernetworks/caffe2.svg) [![](https://images.microbadger.com/badges/image/linkernetworks/caffe2.svg)](https://microbadger.com/images/linkernetworks/caffe2 "linkernetworks/caffe2 image metadata")
