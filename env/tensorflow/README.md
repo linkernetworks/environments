@@ -20,3 +20,8 @@
 # Tensorflow 1.7 environment image
 
 ![docker pulls](https://img.shields.io/docker/pulls/linkernetworks/tensorflow-17.svg) ![docker stars](https://img.shields.io/docker/stars/linkernetworks/tensorflow-17.svg) [![](https://images.microbadger.com/badges/image/linkernetworks/tensorflow-17.svg)](https://microbadger.com/images/linkernetworks/tensorflow-17 "linkernetworks/tensorflow-17 image metadata")
+
+
+# Tensorflow 1.8 environment image
+
+![docker pulls](https://img.shields.io/docker/pulls/linkernetworks/tensorflow-18.svg) ![docker stars](https://img.shields.io/docker/stars/linkernetworks/tensorflow-18.svg) [![](https://images.microbadger.com/badges/image/linkernetworks/tensorflow-18.svg)](https://microbadger.com/images/linkernetworks/tensorflow-18 "linkernetworks/tensorflow-18 image metadata")
