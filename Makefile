@@ -87,10 +87,6 @@ clean-image-%:
 notebook-images: $(NOTEBOOK_TARGETS)
 base-images: $(BASE_TARGETS)
 
-#for debug
-list:
-	@echo  $(NOTEBOOK_TARGETS)
-
 list-images:
 	@echo $(NOTEBOOK_TARGETS) $(BASE_TARGETS)
 
