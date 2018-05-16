@@ -97,7 +97,7 @@ push-public-image-%:
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)
 else
-	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT))
+	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(DOCKERFILE_VARIANT)
 endif
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
