@@ -58,8 +58,7 @@ ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 		$(dir $<)
 else
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
 		--file $< \
 		$(dir $<)
 endif
@@ -98,11 +97,7 @@ list-images:
 clean: clean-notebook-images
 
 push-public-image-%: 
-ifeq ($(strip $(DOCKERFILE_VARIANT)),)
-	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)
-else
-	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(DOCKERFILE_VARIANT)
-endif
+	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
 push-base-images: $(PUSH_BASE_IMAGES)
