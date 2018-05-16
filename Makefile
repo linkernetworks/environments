@@ -30,6 +30,7 @@ endif
 # DOCKER_BUILD_FLAGS=--quiet
 NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/*/Dockerfile$(DOCKERFILE_VARIANT)))
 NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
+NOTEBOOK_VER := $(patsubst %1/%2,%1,$(NOTEBOOK_DIRS))
 NOTEBOOK_NAMES := $(notdir $(NOTEBOOK_DIRS))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 
@@ -88,7 +89,7 @@ notebook-images: $(NOTEBOOK_TARGETS)
 base-images: $(BASE_TARGETS)
 
 list:
-	@echo $(NOTEBOOK_DOCKERFILES)
+	@echo $(NOTEBOOK_VER)
 
 list-images:
 	@echo $(NOTEBOOK_TARGETS) $(BASE_TARGETS)
