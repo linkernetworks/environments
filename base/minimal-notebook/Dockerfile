@@ -47,3 +47,13 @@ ARG CACHE_DATE
 RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
 
 WORKDIR /workspace
+
+RUN echo "echo -e 'Welcome to \033[1;32m aiForge\033[0m Conssole\n'" >> /etc/bash.bashrc
+
+RUN echo "echo -e 'If you want to submit py/ipynb file to Aurora to create a Job, please\n'" >> /etc/bash.bashrc
+
+RUN echo "echo -e 'download the submit tool (aiforge) first. Type this line to download:\n'" >> /etc/bash.bashrc
+
+RUN echo "echo -e 'wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash\n'" >> /etc/bash.bashrc
+
+RUN echo "echo -e 'For more information, refer to https://github.com/linkernetworks/aiforge\n'" >> /etc/bash.bashrc
