@@ -28,9 +28,10 @@ endif
 #     make trainer-image-caffe-trainer DOCKERFILE_VARIANT=".gpu"
 #
 # DOCKER_BUILD_FLAGS=--quiet
-NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/Dockerfile$(DOCKERFILE_VARIANT)))
+NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/*/Dockerfile$(DOCKERFILE_VARIANT)))
 NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
-NOTEBOOK_NAMES := $(notdir $(NOTEBOOK_DIRS))
+NOTEBOOK_VER := $(patsubst %/,%,$(dir $(NOTEBOOK_DIRS)))
+NOTEBOOK_NAMES := $(notdir $(NOTEBOOK_VER))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 
 BASE_DOCKERFILES := $(sort $(wildcard base/*/Dockerfile$(DOCKERFILE_VARIANT)))
@@ -49,17 +50,15 @@ all: base-images push-base-images notebook-images push-notebook-images
 # the first pattern % will locate the Dockerfile,
 # the given DOCKERFILE_VARIANT can be used for specifying which Dockerfile to use.
 # when DOCKERFILE_VARIANT is given, the tag :latest won't be used.
-notebook-image-%: env/%/Dockerfile$(DOCKERFILE_VARIANT) $(shell find env/$* -type f)
+notebook-image-%: env/%/*/Dockerfile$(DOCKERFILE_VARIANT) $(shell find env/$* -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
 		--file $< \
 		$(dir $<)
 else
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
 		--file $< \
 		$(dir $<)
 endif
@@ -94,11 +93,7 @@ list-images:
 clean: clean-notebook-images
 
 push-public-image-%: 
-ifeq ($(strip $(DOCKERFILE_VARIANT)),)
-	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)
-else
-	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT))
-endif
+	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
 push-base-images: $(PUSH_BASE_IMAGES)
