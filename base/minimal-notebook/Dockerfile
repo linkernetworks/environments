@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM jupyter/base-notebook
+FROM linkernetworks/base-notebook:master
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -33,6 +33,10 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 ENV HOME=/
+
+RUN conda update --yes -n base conda \
+    && conda clean -tipsy \
+    && fix-permissions $CONDA_DIR
 
 RUN pip install pip==9.0.3 \
     && pip install -U h5py \
