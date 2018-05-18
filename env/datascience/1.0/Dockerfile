@@ -9,21 +9,8 @@ RUN conda install --quiet --yes \
     && conda clean -tipsy \
     && fix-permissions $CONDA_DIR
 
-# Install PyTorch
-RUN conda install --quiet --yes -c pytorch \
-    pytorch-cpu==0.4.0 \
-    torchvision==0.2.0 \
-    && conda clean -tipsy \
-    && fix-permissions $CONDA_DIR
-
-RUN conda install --quiet --yes \
-    caffe \
-    python-lmdb && \
-    conda clean -tipsy && \
-    fix-permissions $CONDA_DIR
-
 RUN pip install -U pip==9.0.3 \
-    && pip install -U \
+    && pip install \
     beautifulsoup4 \
     bokeh \
     bson \
@@ -43,7 +30,9 @@ RUN pip install -U pip==9.0.3 \
     requests \
     scikit-image \
     scikit-learn \
-    tensorflow \
+    tensorflow==1.8.0 \
+    http://download.pytorch.org/whl/cpu/torch-0.4.0-cp36-cp36m-linux_x86_64.whl \
+    torchvision \
     && pip install -U \
     "git+https://github.com/ahundt/cocoapi.git#egg=pycocotools&subdirectory=PythonAPI" \
     "git+https://github.com/thtrieu/darkflow.git#egg=darkflow" \
