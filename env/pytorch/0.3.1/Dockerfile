@@ -8,3 +8,6 @@ RUN conda install --quiet --yes -c pytorch \
     torchvision==0.2.0 \
     && conda clean -tipsy \
     && fix-permissions $CONDA_DIR
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash

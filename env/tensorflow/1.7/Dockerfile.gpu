@@ -7,3 +7,6 @@ RUN pip install -U \
     tensorflow-gpu==1.7.1 \
     keras \
     && rm -rf ~/.cache/pip
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash
