@@ -4,3 +4,6 @@ FROM linkernetworks/minimal-notebook:master
 RUN pip install -U \
     chainer==3.5.0 \
     && rm -rf ~/.cache/pip
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash

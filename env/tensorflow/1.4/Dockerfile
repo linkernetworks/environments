@@ -7,3 +7,6 @@ RUN pip install \
     tensorflow==1.4.1 \
     keras \
     && rm -rf ~/.cache/pip
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash

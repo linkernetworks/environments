@@ -9,3 +9,6 @@ RUN conda install --quiet --yes -c pytorch \
     cuda90 \
     && conda clean -tipsy \
     && fix-permissions $CONDA_DIR
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash

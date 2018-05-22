@@ -30,3 +30,6 @@ RUN git clone https://github.com/pytorch/pytorch.git /tmp/pytorch \
     && git submodule update --init \
     && python setup_caffe2.py install) \
     && rm -rf /tmp/*
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash

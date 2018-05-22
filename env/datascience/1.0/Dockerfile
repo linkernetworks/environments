@@ -37,3 +37,6 @@ RUN pip install -U pip==9.0.3 \
     "git+https://github.com/ahundt/cocoapi.git#egg=pycocotools&subdirectory=PythonAPI" \
     "git+https://github.com/thtrieu/darkflow.git#egg=darkflow" \
     && rm -rf ~/.cache/pip
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash

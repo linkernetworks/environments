@@ -5,3 +5,8 @@ RUN conda install --quiet --yes -c anaconda \
     python-lmdb && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR
+
+# Disable cache for the following instructions
+# When build, use docker build --build-arg CACHE_DATE="$(date)"
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash

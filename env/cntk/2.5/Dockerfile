@@ -22,3 +22,6 @@ RUN (cd /tmp \
 
 # Install CNTK
 RUN pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.5-cp36-cp36m-linux_x86_64.whl
+
+ARG CACHE_DATE
+RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
