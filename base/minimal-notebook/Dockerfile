@@ -44,10 +44,4 @@ RUN pip install pip==9.0.3 \
     && jupyter nbextension enable --sys-prefix --py widgetsnbextension \
     && rm -rf ~/.cache/pip
 
-# Disable cache for the following instructions
-# When build, use docker build --build-arg CACHE_DATE="$(date)"
-ARG CACHE_DATE
-# Install aiforge command line tool for all base images.
-RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
-
 WORKDIR /workspace
