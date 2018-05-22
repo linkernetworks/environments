@@ -39,4 +39,4 @@ RUN pip install -U pip==9.0.3 \
     && rm -rf ~/.cache/pip
 
 ARG CACHE_DATE
-RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash

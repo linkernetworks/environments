@@ -9,4 +9,4 @@ RUN conda install --quiet --yes -c anaconda \
 # Disable cache for the following instructions
 # When build, use docker build --build-arg CACHE_DATE="$(date)"
 ARG CACHE_DATE
-RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash

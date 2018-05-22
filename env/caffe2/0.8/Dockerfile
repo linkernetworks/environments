@@ -32,4 +32,4 @@ RUN git clone https://github.com/pytorch/pytorch.git /tmp/pytorch \
     && rm -rf /tmp/*
 
 ARG CACHE_DATE
-RUN wget https://raw.githubusercontent.com/linkernetworks/aiforge/master/install.sh -O - | bash
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash
