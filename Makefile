@@ -34,9 +34,6 @@ NOTEBOOK_VER := $(subst /,-,$(NOTEBOOK_DIRS))
 NOTEBOOK_NAMES := $(patsubst env-%,%,$(NOTEBOOK_VER))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 
-debug:
-	@echo $(NOTEBOOK_TARGETS)
-
 BASE_DOCKERFILES := $(sort $(wildcard base/*/Dockerfile$(DOCKERFILE_VARIANT)))
 BASE_DIRS := $(patsubst %/Dockerfile,%,$(basename $(BASE_DOCKERFILES)))
 BASE_NAMES := $(notdir $(BASE_DIRS))
