@@ -30,8 +30,8 @@ endif
 # DOCKER_BUILD_FLAGS=--quiet
 NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/*/Dockerfile$(DOCKERFILE_VARIANT)))
 NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
-NOTEBOOK_VER := $(patsubst %/,%,$(dir $(NOTEBOOK_DIRS)))
-NOTEBOOK_NAMES := $(notdir $(NOTEBOOK_VER))
+NOTEBOOK_VER := $(subst /,-,$(NOTEBOOK_DIRS))
+NOTEBOOK_NAMES := $(patsubst env-%,%,$(NOTEBOOK_VER))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 
 BASE_DOCKERFILES := $(sort $(wildcard base/*/Dockerfile$(DOCKERFILE_VARIANT)))
@@ -50,7 +50,8 @@ all: base-images push-base-images notebook-images push-notebook-images
 # the first pattern % will locate the Dockerfile,
 # the given DOCKERFILE_VARIANT can be used for specifying which Dockerfile to use.
 # when DOCKERFILE_VARIANT is given, the tag :latest won't be used.
-notebook-image-%: env/%/*/Dockerfile$(DOCKERFILE_VARIANT) $(shell find env/$* -type f)
+.SECONDEXPANSION:
+notebook-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
