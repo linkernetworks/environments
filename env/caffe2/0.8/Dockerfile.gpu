@@ -32,4 +32,6 @@ RUN git clone https://github.com/pytorch/pytorch.git /tmp/pytorch \
     && rm -rf /tmp/*
 
 ARG CACHE_DATE
-RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash
+ARG SUBMIT_TOOL_NAME=aurora
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
+    && move /usr/local/bin/aiforge $SUBMIT_TOOL_NAME
