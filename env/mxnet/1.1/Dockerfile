@@ -15,4 +15,4 @@ RUN pip install -U mxnet==1.1.0 \
 ARG CACHE_DATE
 ARG SUBMIT_TOOL_NAME=aurora
 RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
-    && mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME
+    && if [ "$SUBMIT_TOOL_NAME" != "aurora" ]; then mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME; fi
