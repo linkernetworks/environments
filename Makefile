@@ -53,11 +53,11 @@ all: base-images push-base-images notebook-images push-notebook-images
 # the first pattern % will locate the Dockerfile,
 # the given DOCKERFILE_VARIANT can be used for specifying which Dockerfile to use.
 # when DOCKERFILE_VARIANT is given, the tag :latest won't be used.
-notebook-image-%: env/$(firstword $(subst :, ,%))/Dockerfile$(DOCKERFILE_VARIANT) $(shell find env -type f)
-	@echo 
+.SECONDEXPANSION:
+notebook-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
-	@echo $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))
-#		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
+	time docker build $(DOCKER_BUILD_FLAGS) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
 		--file $< \
 		$(dir $<)
 else
