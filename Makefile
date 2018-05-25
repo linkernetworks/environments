@@ -89,7 +89,7 @@ notebook-images: $(NOTEBOOK_TARGETS)
 base-images: $(BASE_TARGETS)
 
 list-images:
-	@echo $(NOTEBOOK_VER)
+	@echo $(NOTEBOOK_TARGETS) $(BASE_TARGETS)
 
 clean: clean-notebook-images
 
