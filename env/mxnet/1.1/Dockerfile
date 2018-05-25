@@ -13,4 +13,6 @@ RUN pip install -U mxnet==1.1.0 \
     rm -rf ~/.cache/pip
 
 ARG CACHE_DATE
-RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash
+ARG SUBMIT_TOOL_NAME=aurora
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
+    && move /usr/local/bin/aiforge $SUBMIT_TOOL_NAME
