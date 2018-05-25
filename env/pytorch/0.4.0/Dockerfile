@@ -12,4 +12,4 @@ RUN conda install --quiet --yes -c pytorch \
 ARG CACHE_DATE
 ARG SUBMIT_TOOL_NAME=aurora
 RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
-    && move /usr/local/bin/aiforge $SUBMIT_TOOL_NAME
+    && mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME
