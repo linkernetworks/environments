@@ -26,4 +26,4 @@ RUN pip install https://cntk.ai/PythonWheel/CPU-Only/cntk-2.5-cp36-cp36m-linux_x
 ARG CACHE_DATE
 ARG SUBMIT_TOOL_NAME=aurora
 RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
-    && mv /usr/local/bin/aiforge /usr/local/bin/$SUBMIT_TOOL_NAME
+    && mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME
