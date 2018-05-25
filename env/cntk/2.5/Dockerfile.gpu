@@ -26,4 +26,4 @@ RUN pip install https://cntk.ai/PythonWheel/GPU/cntk_gpu-2.5-cp36-cp36m-linux_x8
 ARG CACHE_DATE
 ARG SUBMIT_TOOL_NAME=aurora
 RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
-    && mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME
+    && if [ "$SUBMIT_TOOL_NAME" != "aurora" ]; then mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME; fi
