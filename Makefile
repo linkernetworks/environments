@@ -54,7 +54,7 @@ all: base-images push-base-images notebook-images push-notebook-images
 notebook-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<))))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
 		--file $< \
 		$(dir $<)
 else
