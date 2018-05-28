@@ -95,7 +95,7 @@ clean: clean-notebook-images
 
 .SECONDEXPANSION:
 push-public-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
- &	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<)))))
+	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<)))))
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
 push-base-images: $(PUSH_BASE_IMAGES)
