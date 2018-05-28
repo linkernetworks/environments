@@ -54,12 +54,12 @@ all: base-images push-base-images notebook-images push-notebook-images
 notebook-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<))))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
 		--file $< \
 		$(dir $<)
 else
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
 		--file $< \
 		$(dir $<)
 endif
@@ -93,8 +93,9 @@ list-images:
 
 clean: clean-notebook-images
 
-push-public-image-%: 
-	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*
+.SECONDEXPANSION:
+push-public-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
+	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<)))))
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
 push-base-images: $(PUSH_BASE_IMAGES)
