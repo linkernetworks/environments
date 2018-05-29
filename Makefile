@@ -50,16 +50,19 @@ all: base-images push-base-images notebook-images push-notebook-images
 # the first pattern % will locate the Dockerfile,
 # the given DOCKERFILE_VARIANT can be used for specifying which Dockerfile to use.
 # when DOCKERFILE_VARIANT is given, the tag :latest won't be used.
+# It will make two tags caffe:1.0-gpu/ caffe-1.0:master.
 .SECONDEXPANSION:
 notebook-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
 ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 	time docker build $(DOCKER_BUILD_FLAGS) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<))))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG) \
 		--file $< \
 		$(dir $<)
-else
+else	
 	time docker build $(DOCKER_BUILD_FLAGS) \
-		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<))$(subst .,-,$(DOCKERFILE_VARIANT))))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
+		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
 		--file $< \
 		$(dir $<)
 endif
@@ -83,7 +86,11 @@ endif
 clean-notebook-images: $(CLEAN_NOTEBOOK_IMAGES)
 
 clean-image-%:
-	docker rmi -f $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_TAG) || true
+ifeq ($(strip $(DOCKERFILE_VARIANT)),)
+	docker rmi -f $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG) || true
+else	
+	docker rmi -f $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) || true
+endif
 
 notebook-images: $(NOTEBOOK_TARGETS)
 base-images: $(BASE_TARGETS)
