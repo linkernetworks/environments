@@ -29,18 +29,21 @@ endif
 #
 # DOCKER_BUILD_FLAGS=--quiet
 NOTEBOOK_DOCKERFILES := $(sort $(wildcard env/*/*/Dockerfile$(DOCKERFILE_VARIANT)))
-NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(basename $(NOTEBOOK_DOCKERFILES)))
+NOTEBOOK_DIRS := $(patsubst %/Dockerfile,%,$(NOTEBOOK_DOCKERFILES))
 NOTEBOOK_VER := $(subst /,-,$(NOTEBOOK_DIRS))
 NOTEBOOK_NAMES := $(patsubst env-%,%,$(NOTEBOOK_VER))
 NOTEBOOK_TARGETS := $(addprefix notebook-image-,$(NOTEBOOK_NAMES))
 
+debug:
+	@echo $(NOTEBOOK_DIRS)
+	
 BASE_DOCKERFILES := $(sort $(wildcard base/*/Dockerfile$(DOCKERFILE_VARIANT)))
 BASE_DIRS := $(patsubst %/Dockerfile,%,$(basename $(BASE_DOCKERFILES)))
 BASE_NAMES := $(notdir $(BASE_DIRS))
 BASE_TARGETS := $(addprefix base-image-,$(BASE_NAMES))
 
-PUSH_NOTEBOOK_IMAGES := $(addprefix push-public-image-,$(NOTEBOOK_NAMES))
-PUSH_BASE_IMAGES := $(addprefix push-public-image-,$(BASE_NAMES))
+PUSH_NOTEBOOK_IMAGES := $(addprefix push-notebook-image-,$(NOTEBOOK_NAMES))
+PUSH_BASE_IMAGES := $(addprefix push-base-image-,$(BASE_NAMES))
 
 IMAGE_NAMES := $(BASE_NAMES) $(NOTEBOOK_NAMES) 
 CLEAN_NOTEBOOK_IMAGES := $(addprefix clean-image-,$(IMAGE_NAMES))
@@ -101,8 +104,11 @@ list-images:
 clean: clean-notebook-images
 
 .SECONDEXPANSION:
-push-public-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
+push-notebook-image-%: env/$$(subst -,/,%)/Dockerfile$(DOCKERFILE_VARIANT) $$(shell find env -type f)
 	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<)))))
+
+push-base-image-%: 
+	docker push $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*
 
 push-notebook-images: $(PUSH_NOTEBOOK_IMAGES)
 push-base-images: $(PUSH_BASE_IMAGES)
