@@ -210,7 +210,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['1.8', '1.7', '1.6', '1.5.1', '1.4', '1.3'].each {
+                            ['1.9', '1.8', '1.7', '1.6', '1.5.1', '1.4', '1.3'].each {
                                 buildImage "linkernetworks/tensorflow:${it}", "env/tensorflow/${it}"
                                 buildImageWithVariant "linkernetworks/tensorflow:${it}", "env/tensorflow/${it}", "gpu"
                             }
