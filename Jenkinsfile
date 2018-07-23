@@ -35,6 +35,16 @@ def buildImageWithVariant(String tag, String dir, String variant) {
     }
 }
 
+def dirNames (path) {
+    return findFiles(
+        glob: path + '/**/Dockerfile'
+    ).collect { dockerfile ->
+        new File(dockerfile.getPath()).getParentFile()
+    }.collect { dir ->
+        dir.getName()
+    }
+}
+
 
 pipeline {
     agent none
@@ -180,7 +190,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['1.0'].each {
+                            dirNames("env/caffe").each {
                                 buildImage "linkernetworks/caffe:${it}", "env/caffe/${it}"
                                 buildImageWithVariant "linkernetworks/caffe:${it}", "env/caffe/${it}", "gpu"
                             }
@@ -195,7 +205,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['0.8'].each {
+                            dirNames("env/caffe2").each {
                                 buildImage "linkernetworks/caffe2:${it}", "env/caffe2/${it}"
                                 buildImageWithVariant "linkernetworks/caffe2:${it}", "env/caffe2/${it}", "gpu"
                             }
@@ -210,7 +220,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['1.9', '1.8', '1.7', '1.6', '1.5.1', '1.4', '1.3'].each {
+                            dirNames("env/tensorflow").each {
                                 buildImage "linkernetworks/tensorflow:${it}", "env/tensorflow/${it}"
                                 buildImageWithVariant "linkernetworks/tensorflow:${it}", "env/tensorflow/${it}", "gpu"
                             }
@@ -225,7 +235,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['0.3.1', '0.4.0'].each {
+                            dirNames("env/pytorch").each {
                                 buildImage "linkernetworks/pytorch:${it}", "env/pytorch/${it}"
                                 buildImageWithVariant "linkernetworks/pytorch:${it}", "env/pytorch/${it}", "gpu"
                             }
@@ -240,7 +250,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['1.1'].each {
+                            dirNames("env/mxnet").each {
                                 buildImage "linkernetworks/mxnet:${it}", "env/mxnet/${it}"
                                 buildImageWithVariant "linkernetworks/mxnet:${it}", "env/mxnet/${it}", "gpu"
                             }
@@ -255,7 +265,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['1.0'].each {
+                            dirNames("env/datascience").each {
                                 buildImage "linkernetworks/datascience:${it}", "env/datascience/${it}"
                                 buildImageWithVariant "linkernetworks/datascience:${it}", "env/datascience/${it}", "gpu"
                             }
@@ -270,7 +280,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['2.5'].each {
+                            dirNames("env/cntk").each {
                                 buildImage "linkernetworks/cntk:${it}", "env/cntk/${it}"
                                 buildImageWithVariant "linkernetworks/cntk:${it}", "env/cntk/${it}", "gpu"
                             }
@@ -285,7 +295,7 @@ pipeline {
                         pullImage "linkernetworks/minimal-notebook:master"
                         pullImage "linkernetworks/minimal-notebook:master-gpu"
                         script {
-                            ['3.5'].each {
+                            dirNames("env/chainer").each {
                                 buildImage "linkernetworks/chainer:${it}", "env/chainer/${it}"
                                 buildImageWithVariant "linkernetworks/chainer:${it}", "env/chainer/${it}", "gpu"
                             }
