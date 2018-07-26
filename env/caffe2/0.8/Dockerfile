@@ -1,4 +1,5 @@
-FROM linkernetworks/minimal-notebook:master
+ARG BASE_IMAGE=linkernetworks/minimal-notebook:master
+FROM $BASE_IMAGE
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -21,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN conda install --quiet --yes \
     future numpy protobuf \
-    && conda clean -tipsy \ 
+    && conda clean -tipsy \
     && fix-permissions $CONDA_DIR
 
 RUN git clone --branch v0.4.1 https://github.com/pytorch/pytorch.git /tmp/pytorch \
