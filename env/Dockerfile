@@ -1,8 +1,6 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
-LABEL maintainer="Narumi"
-
 USER root
 
 # Install all OS dependencies for notebook server that starts but lacks all
@@ -36,7 +34,7 @@ ENV SHELL=/bin/bash \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV HOME=/root
+ENV HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
 # Create jovyan user with UID=1000 and in the 'users' group
@@ -50,6 +48,8 @@ USER $NB_UID
 # Setup work directory for backward-compatibility
 RUN mkdir /home/$NB_USER/work && \
     fix-permissions /home/$NB_USER
+
+USER root
 
 EXPOSE 8888
 WORKDIR $HOME
