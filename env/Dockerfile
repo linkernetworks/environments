@@ -61,16 +61,14 @@ COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN fix-permissions /etc/jupyter/
 
+ARG CACHE_DATE
+ARG SUBMIT_TOOL_NAME=aurora
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
+    && if [ "$SUBMIT_TOOL_NAME" != "aurora" ]; then mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME; fi
+
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 ENV JPY_USER root
 CMD ["start-notebook.sh"]
 
-ENV HOME=/
-
 WORKDIR /workspace
-
-ARG CACHE_DATE
-ARG SUBMIT_TOOL_NAME=aurora
-RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
-    && if [ "$SUBMIT_TOOL_NAME" != "aurora" ]; then mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME; fi
