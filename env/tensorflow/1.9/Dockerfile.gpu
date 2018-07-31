@@ -1,14 +1,11 @@
 FROM tensorflow/tensorflow:1.9.0-gpu-py3
 
-LABEL maintainer="Narumi"
-
 USER root
 
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get -yq dist-upgrade \
-    && apt-get install -yq --no-install-recommends \
+RUN apt-get update && apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
     ca-certificates \
@@ -35,7 +32,7 @@ ENV SHELL=/bin/bash \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
-ENV HOME=/root
+ENV HOME=/home/$NB_USER
 
 ADD fix-permissions /usr/local/bin/fix-permissions
 # Create jovyan user with UID=1000 and in the 'users' group
@@ -50,6 +47,8 @@ USER $NB_UID
 RUN mkdir /home/$NB_USER/work && \
     fix-permissions /home/$NB_USER
 
+USER root
+
 EXPOSE 8888
 WORKDIR $HOME
 
@@ -60,16 +59,14 @@ COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 RUN fix-permissions /etc/jupyter/
 
+ARG CACHE_DATE
+ARG SUBMIT_TOOL_NAME=aurora
+RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
+    && if [ "$SUBMIT_TOOL_NAME" != "aurora" ]; then mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME; fi
+
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 ENV JPY_USER root
 CMD ["start-notebook.sh"]
 
-ENV HOME=/
-
 WORKDIR /workspace
-
-ARG CACHE_DATE
-ARG SUBMIT_TOOL_NAME=aurora
-RUN wget https://raw.githubusercontent.com/linkernetworks/aurora/master/install.sh -O - | bash \
-    && if [ "$SUBMIT_TOOL_NAME" != "aurora" ]; then mv /usr/local/bin/aurora /usr/local/bin/$SUBMIT_TOOL_NAME; fi
