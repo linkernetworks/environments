@@ -61,13 +61,13 @@ ifeq ($(strip $(DOCKERFILE_VARIANT)),)
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<))))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<))) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG) \
 		--file $< \
-		$(dir $<)
+		env/
 else	
 	time docker build $(DOCKER_BUILD_FLAGS) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$(notdir $(patsubst %/, %, $(dir $(patsubst %/Dockerfile,%,$(basename $<))$(subst .,-,$(DOCKERFILE_VARIANT))))):$(notdir $(patsubst %/Dockerfile,%,$(basename $<)))$(subst .,-,$(DOCKERFILE_VARIANT)) \
 		--tag $(PUBLIC_DOCKER_REGISTRY)/$(DOCKER_PROJECT)/$*:$(IMAGE_ANCHOR_TAG)$(subst .,-,$(DOCKERFILE_VARIANT)) \
 		--file $< \
-		$(dir $<)
+		env/
 endif
 
 base-image-%: base/%/Dockerfile$(DOCKERFILE_VARIANT) $(shell find base/$* -type f)
