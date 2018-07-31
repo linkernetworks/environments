@@ -24,9 +24,8 @@ RUN conda install --quiet --yes \
     && conda clean -tipsy \ 
     && fix-permissions $CONDA_DIR
 
-RUN git clone https://github.com/pytorch/pytorch.git /tmp/pytorch \
+RUN git clone --branch v0.4.1 https://github.com/pytorch/pytorch.git /tmp/pytorch \
     && (cd /tmp/pytorch \
-    && git checkout master \
     && git submodule update --init \
     && python setup_caffe2.py install) \
     && rm -rf /tmp/*
