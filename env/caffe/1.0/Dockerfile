@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
     python3-numpy \
     python3-pip \
+    python3-pydot \
     python3-scipy \
     python3-setuptools \
     wget \
@@ -47,6 +48,7 @@ RUN pip3 install pip==9.0.3 \
     six \
     pydot \
     jupyter \
+    lmdb \
     && rm -rf ~/.cache/pip
 
 ENV CAFFE_ROOT=/opt/caffe
