@@ -1,4 +1,5 @@
-FROM linkernetworks/minimal-notebook:master
+ARG BASE_IMAGE=linkernetworks/minimal-notebook:master
+FROM $BASE_IMAGE
 
 # Install Chainer
 RUN pip install -U \

@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-
-FROM linkernetworks/base-notebook:master
+ARG BASE_IMAGE=linkernetworks/base-notebook:master
+FROM $BASE_IMAGE
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 

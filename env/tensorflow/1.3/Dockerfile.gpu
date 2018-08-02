@@ -1,4 +1,5 @@
-FROM linkernetworks/minimal-notebook:master-gpu
+ARG BASE_IMAGE=linkernetworks/minimal-notebook:master-gpu
+FROM $BASE_IMAGE
 
 LABEL maintainer="Narumi"
 

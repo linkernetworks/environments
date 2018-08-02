@@ -1,4 +1,5 @@
-FROM linkernetworks/minimal-notebook:master-cuda90
+ARG BASE_IMAGE=linkernetworks/minimal-notebook:master-cuda90
+FROM $BASE_IMAGE
 
 LABEL maintainer="Narumi"
 

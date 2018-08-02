@@ -1,4 +1,5 @@
-FROM linkernetworks/minimal-notebook:master
+ARG BASE_IMAGE=linkernetworks/minimal-notebook:master
+FROM $BASE_IMAGE
 
 LABEL maintainer="Narumi"
 
@@ -23,8 +24,8 @@ RUN pip install -U pip==9.0.3 \
     nltk \
     numpy \
     orderedset \
-    pandas \ 
-    Pillow \ 
+    pandas \
+    Pillow \
     psutil \
     pymongo \
     requests \
