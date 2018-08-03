@@ -50,11 +50,45 @@ class ImageConfig {
     boolean push       = false
 }
 
+def getChangedFiles () {
+    if (env.BRANCH_NAME == 'master') {
+        checkout scm
+
+        // Get last 2 merge commits.
+        // The 1st result is the new PR.
+        // The 2nd result is previous PR which is used to 'git diff'.
+        def merges = sh(
+                returnStdout: true,
+                script: 'git log  --format=format:%H --merges -n 2'
+            ).trim().split("\n")
+
+        return sh(
+                returnStdout: true,
+                script: "git diff --name-only ${merges[1]} HEAD"
+            ).trim().split("\n")
+
+    } else {
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: '*/master']],
+            doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
+            userRemoteConfigs: scm.userRemoteConfigs
+        ])
+
+        checkout scm
+
+        return sh(
+                returnStdout: true,
+                script: 'git diff --name-only refs/remotes/origin/master HEAD'
+            ).trim().split("\n")
+    }
+}
+
 def getStages(configs) {
 
     def filteredConfigs = configs
 
-    if ( !shouldDeploy() && params.BuildIfFileChanged) {
+    if (params.BuildIfFileChanged) {
         def label = "environments-pod-${UUID.randomUUID().toString()}"
         podTemplate(label: label, nodeUsageMode: 'EXCLUSIVE', yaml: """
 apiVersion: v1
@@ -63,19 +97,9 @@ spec:
     """
         ) {
             node (label) {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
-                    userRemoteConfigs: scm.userRemoteConfigs
-                ])
 
-                checkout scm
-
-                def allFiles = sh(
-                        returnStdout: true,
-                        script: 'git diff --name-only refs/remotes/origin/master HEAD'
-                    ).trim().split("\n")
+                def allFiles = getChangedFiles()
+                allFiles.each { echo "${it} is changed." }
 
                 filteredConfigs = filteredConfigs.findAll { config ->
                     def dir = new File(config.folder)
@@ -163,8 +187,7 @@ pipeline {
         booleanParam(
             name: 'BuildIfFileChanged',
             defaultValue: true,
-            description: 'If true, jenkins only builds images which the files are different from master branch. ' +
-                'If current branch is master, jenkins discare this parameter and always build all images.'
+            description: 'If true, jenkins only builds images which the files are modified.'
         )
     }
     stages {
