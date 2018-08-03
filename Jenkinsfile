@@ -205,6 +205,15 @@ pipeline {
                             dockerfile: "Dockerfile.gpu",
                             push: shouldDeploy(),
                         ), new ImageConfig(
+                            tag: "linkernetworks/caffe-ssd:1.0",
+                            folder: "env/caffe-ssd/1.0",
+                            push: shouldDeploy(),
+                        ), new ImageConfig(
+                            tag: "linkernetworks/caffe-ssd:1.0-gpu",
+                            folder: "env/caffe-ssd/1.0",
+                            dockerfile: "Dockerfile.gpu",
+                            push: shouldDeploy(),
+                        ), new ImageConfig(
                             tag: "linkernetworks/caffe2:0.8",
                             folder: "env/caffe2/0.8",
                             baseImage: "linkernetworks/minimal-notebook:${params.BuildBaseImages ? branchTag : 'master'}",
