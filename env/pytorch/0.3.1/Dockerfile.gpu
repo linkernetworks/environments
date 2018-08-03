@@ -4,12 +4,11 @@ FROM $BASE_IMAGE
 LABEL maintainer="Narumi"
 
 # Install PyTorch
-RUN conda install --quiet --yes -c pytorch \
-    pytorch==0.3.1 \
-    torchvision==0.2.0 \
-    cuda90 \
-    && conda clean -tipsy \
-    && fix-permissions $CONDA_DIR
+RUN pip install pip==9.0.3 \
+    && pip install \
+    http://download.pytorch.org/whl/cu90/torch-0.3.1-cp36-cp36m-linux_x86_64.whl \
+    torchvision \
+    && rm -rf ~/.cache/pip
 
 ARG CACHE_DATE
 ARG SUBMIT_TOOL_NAME=aurora
