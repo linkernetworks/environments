@@ -51,7 +51,49 @@ class ImageConfig {
 }
 
 def getStages(configs) {
-    return configs.collectEntries { config ->
+
+    def filteredConfigs = configs
+
+    if ( !shouldDeploy() && params.BuildIfFileChanged) {
+        def label = "environments-pod-${UUID.randomUUID().toString()}"
+        podTemplate(label: label, nodeUsageMode: 'EXCLUSIVE', yaml: """
+apiVersion: v1
+kind: Pod
+spec:
+    """
+        ) {
+            node (label) {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/master']],
+                    doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ])
+
+                checkout scm
+
+                def allFiles = sh(
+                        returnStdout: true,
+                        script: 'git diff --name-only refs/remotes/origin/master HEAD'
+                    ).trim().split("\n")
+
+                filteredConfigs = filteredConfigs.findAll { config ->
+                    def dir = new File(config.folder)
+                    def changedFiles = allFiles.findAll { new File(it).getPath().contains(dir.getPath()) }
+                    if (changedFiles.size() > 0) {
+                        echo "${config.tag}: ${changedFiles.size()} files are changed"
+                        changedFiles.each { echo "${config.tag}: ${it}" }
+                        return true
+                    } else {
+                        echo "${config.tag}: No file is changed. Skip."
+                        return false
+                    }
+                }
+            }
+        }
+    }
+
+    return filteredConfigs.collectEntries { config ->
         [(config.tag): {
             retry (3) {
                 timeout(90) {
@@ -117,6 +159,12 @@ pipeline {
             defaultValue: false,
             description: 'If true, jenkins will build all base images. ' +
                 'If current branch is master, jenkins discare this parameter and always build base images.'
+        )
+        booleanParam(
+            name: 'BuildIfFileChanged',
+            defaultValue: true,
+            description: 'If true, jenkins only builds images which the files are different from master branch. ' +
+                'If current branch is master, jenkins discare this parameter and always build all images.'
         )
     }
     stages {
@@ -202,6 +250,15 @@ pipeline {
                         ), new ImageConfig(
                             tag: "linkernetworks/caffe:1.0-gpu",
                             folder: "env/caffe/1.0",
+                            dockerfile: "Dockerfile.gpu",
+                            push: shouldDeploy(),
+                        ), new ImageConfig(
+                            tag: "linkernetworks/caffe-ssd:1.0",
+                            folder: "env/caffe-ssd/1.0",
+                            push: shouldDeploy(),
+                        ), new ImageConfig(
+                            tag: "linkernetworks/caffe-ssd:1.0-gpu",
+                            folder: "env/caffe-ssd/1.0",
                             dockerfile: "Dockerfile.gpu",
                             push: shouldDeploy(),
                         ), new ImageConfig(

@@ -5,7 +5,7 @@ RUN pip install \
     jupyter \
     && rm -rf ~/.cache/pip
 
-RUN alias python3=python
+RUN ln -s /usr/bin/python /usr/bin/python3
 
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
