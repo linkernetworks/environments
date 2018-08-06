@@ -1,8 +1,9 @@
 FROM fstyle/caffe-ssd
 
 RUN pip install \
-    lmdb \
     jupyter \
+    lmdb \
+    opencv-contrib-python \
     && rm -rf ~/.cache/pip
 
 RUN alias python3=python
