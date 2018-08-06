@@ -397,6 +397,15 @@ pipeline {
                             baseImage: "linkernetworks/minimal-notebook:${params.BuildBaseImages ? branchTag : 'master'}-cuda90",
                             push: shouldDeploy(),
                         ), new ImageConfig(
+                            tag: "linkernetworks/pytorch:0.4.1",
+                            folder: "env/pytorch/0.4.1",
+                            push: shouldDeploy(),
+                        ), new ImageConfig(
+                            tag: "linkernetworks/pytorch:0.4.1-gpu",
+                            folder: "env/pytorch/0.4.1",
+                            dockerfile: "Dockerfile.gpu",
+                            push: shouldDeploy(),
+                        ), new ImageConfig(
                             tag: "linkernetworks/mxnet:1.1",
                             folder: "env/mxnet/1.1",
                             baseImage: "linkernetworks/minimal-notebook:${params.BuildBaseImages ? branchTag : 'master'}",
