@@ -1,8 +1,9 @@
 FROM fstyle/caffe-ssd
 
 RUN pip install \
-    lmdb \
     jupyter \
+    lmdb \
+    opencv-contrib-python \
     && rm -rf ~/.cache/pip
 
 RUN ln -s /usr/bin/python /usr/bin/python3
