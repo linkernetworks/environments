@@ -12,11 +12,12 @@ RUN ln -s /usr/bin/python /usr/bin/python3
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -yq --no-install-recommends \
-    wget \
     bzip2 \
     ca-certificates \
     locales \
     netcat \
+    sudo \
+    wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -30,9 +31,19 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
     chmod +x /usr/local/bin/tini
 
 # Configure environment
-ENV LC_ALL=en_US.UTF-8 \
+ENV SHELL=/bin/bash \
+    NB_USER=aurora \
+    NB_UID=1000 \
+    NB_GID=100 \
+    LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
+
+# Create aurora user with UID=1000 and in the 'users' group
+RUN groupadd wheel -g 11 && \
+    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
+    useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
+    chmod g+w /etc/passwd
 
 EXPOSE 8888
 WORKDIR /workspace
