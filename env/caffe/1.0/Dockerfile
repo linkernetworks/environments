@@ -1,10 +1,10 @@
 FROM ubuntu:16.04
 
-LABEL maintainer Narumi
-
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    bzip2 \
+    ca-certificates \
     cmake \
     git \
     libatlas-base-dev \
@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libopencv-dev \
     libprotobuf-dev \
     libsnappy-dev \
+    locales \
+    netcat \
     protobuf-compiler \
     python3-dev \
     python3-numpy \
@@ -24,31 +26,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pydot \
     python3-scipy \
     python3-setuptools \
+    sudo \
     wget \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install pip==9.0.3 \
     && pip3 install -U \
     cython \
-    numpy \
-    scipy \
-    scikit-image \
-    matplotlib \
-    ipython \
     h5py \
+    ipython \
+    jupyter \
     leveldb \
+    lmdb \
+    matplotlib \
     networkx \
     nose \
+    numpy \
     pandas \
-    python-dateutil \
+    Pillow \
     protobuf \
+    pydot \
+    python-dateutil \
     python-gflags \
     pyyaml \
-    Pillow \
+    scikit-image \
+    scipy \
     six \
-    pydot \
-    jupyter \
-    lmdb \
     && rm -rf ~/.cache/pip
 
 ENV CAFFE_ROOT=/opt/caffe
@@ -68,18 +72,6 @@ ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo '$CAFFE_ROOT/build/lib' >> /etc/ld.so.conf.d/caffe.conf \
     && ldconfig
 
-# Install all OS dependencies for notebook server that starts but lacks all
-# features (e.g., download as all possible file formats)
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    wget \
-    bzip2 \
-    ca-certificates \
-    locales \
-    netcat \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
@@ -90,9 +82,19 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
     chmod +x /usr/local/bin/tini
 
 # Configure environment
-ENV LC_ALL=en_US.UTF-8 \
+ENV SHELL=/bin/bash \
+    NB_USER=aurora \
+    NB_UID=1000 \
+    NB_GID=100 \
+    LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
+
+# Create aurora user with UID=1000 and in the 'users' group
+RUN groupadd wheel -g 11 && \
+    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
+    useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
+    chmod g+w /etc/passwd
 
 EXPOSE 8888
 WORKDIR /workspace
