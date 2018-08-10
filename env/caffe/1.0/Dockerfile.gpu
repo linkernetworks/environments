@@ -90,16 +90,15 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
 ENV SHELL=/bin/bash \
     NB_USER=aurora \
     NB_UID=1000 \
-    NB_GID=100 \
+    NB_GID=2000 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
 
-# Create aurora user with UID=1000 and in the 'users' group
-RUN groupadd wheel -g 11 && \
-    echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
-    useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
-    chmod g+w /etc/passwd
+# Create aurora user with UID=1000 and in the 'aurora' group
+RUN groupadd -g $NB_GID $NB_USER \
+    && useradd -m -s $SHELL -N -u $NB_UID -g $NB_GID $NB_USER \
+    && echo '%'$NB_USER 'ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 EXPOSE 8888
 WORKDIR /workspace
