@@ -88,18 +88,17 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
 
 # Configure environment
 ENV SHELL=/bin/bash \
-    USER_NAME=aurora \
-    GROUP_NAME=aurora \
-    USER_ID=1000 \
-    GROUP_ID=2000 \
+    NB_USER=aurora \
+    NB_UID=1000 \
+    NB_GID=2000 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
 
 # Create aurora user with UID=1000 and in the 'aurora' group
-RUN groupadd -g $GROUP_ID $GROUP_NAME \
-    && useradd -m -s $SHELL -N -u $USER_ID -g $GROUP_ID $USER_NAME \
-    && echo '%'$USER_NAME 'ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN groupadd -g $NB_GID $NB_USER \
+    && useradd -m -s $SHELL -N -u $NB_UID -g $NB_GID $NB_USER \
+    && echo '%'$NB_USER 'ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 EXPOSE 8888
 WORKDIR /workspace
