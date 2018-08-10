@@ -37,7 +37,7 @@ ENV CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \
     NB_USER=aurora \
     NB_UID=1000 \
-    NB_GID=100 \
+    NB_GID=2000 \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
@@ -47,8 +47,8 @@ ENV PATH=$CONDA_DIR/bin:$PATH \
 ADD fix-permissions /usr/local/bin/fix-permissions
 # Create aurora user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
-RUN groupadd -g 2000 aurora && \
-    useradd -m -s /bin/bash -N -u $NB_UID -g 2000 $NB_USER && \
+RUN groupadd -g $NB_GID aurora && \
+    useradd -m -s /bin/bash -N -u $NB_UID -g aurora $NB_USER && \
     mkdir -p $CONDA_DIR && \
     chown $NB_USER:$NB_GID $CONDA_DIR && \
     chmod g+w /etc/passwd /etc/group && \
