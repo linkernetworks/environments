@@ -425,7 +425,7 @@ pipeline {
                             tag: "linkernetworks/datascience:1.0-gpu",
                             folder: "env/datascience/1.0",
                             dockerfile: "Dockerfile.gpu",
-                            baseImage: "linkernetworks/minimal-notebook:${params.BuildBaseImages ? branchTag : 'master'}-gpu",
+                            baseImage: "linkernetworks/minimal-notebook:${params.BuildBaseImages ? branchTag : 'master'}-cuda90",
                             push: shouldDeploy(),
                         ), new ImageConfig(
                             tag: "linkernetworks/cntk:2.5",
