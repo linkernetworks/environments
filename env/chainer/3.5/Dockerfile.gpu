@@ -3,7 +3,7 @@ FROM $BASE_IMAGE
 
 # Install Chainer and CuPy
 RUN pip install -U \
-    cupy==2.5.0 \
+    cupy==4.4.0 \
     chainer==3.5.0 \
     && rm -rf ~/.cache/pip
 
